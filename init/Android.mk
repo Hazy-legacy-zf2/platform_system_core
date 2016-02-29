@@ -48,6 +48,7 @@ LOCAL_SRC_FILES:= \
     ueventd.cpp \
     ueventd_parser.cpp \
     watchdogd.cpp \
+    vendor_init.cpp
 
 LOCAL_MODULE:= init
 LOCAL_C_INCLUDES += \
@@ -71,6 +72,17 @@ LOCAL_STATIC_LIBRARIES := \
     libc \
     libselinux \
     libmincrypt \
+
+
+    libext4_utils_static \
+    libext2_blkid \
+    libext2_uuid_static \
+
+
+    libext4_utils_static \
+    libext2_blkid \
+    libext2_uuid \
+
     libc++_static \
     libdl \
     libsparse_static \
@@ -82,6 +94,11 @@ LOCAL_POST_INSTALL_CMD := $(hide) mkdir -p $(TARGET_ROOT_OUT)/sbin; \
     ln -sf ../init $(TARGET_ROOT_OUT)/sbin/watchdogd
 
 LOCAL_CLANG := $(init_clang)
+
+ifneq ($(strip $(TARGET_INIT_VENDOR_LIB)),)
+LOCAL_WHOLE_STATIC_LIBRARIES += $(TARGET_INIT_VENDOR_LIB)
+endif
+
 include $(BUILD_EXECUTABLE)
 
 
